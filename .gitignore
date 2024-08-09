@@ -2,7 +2,7 @@
 *.exe
 *.exe~
 *.dll
-*.so
+# *.so
 *.dylib
 
 # Test binary, built with `go test -c`
@@ -28,7 +28,7 @@
 *.pch
 
 # Compiled Dynamic libraries
-*.so
+# *.so
 *.dylib
 *.dll
 
