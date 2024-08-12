@@ -21,8 +21,14 @@ void overlayFace(cv::Mat croppedFace, cv::Mat origFrame, cv::Mat emotionImg, Fac
               cv::Size(croppedFace.cols, croppedFace.rows),
               cv::INTER_LINEAR);
   
-  // this kinda works because the emojis are brighter than everyon's faces
-  cv::max(croppedFace, resizedEmotionImg, resizedEmotionImg);
+  cv::Mat zeroMask = (resizedEmotionImg == 0);
+  cv::Mat flippedEmoji = cv::Mat::ones(zeroMask.size(), zeroMask.type());
+  flippedEmoji.setTo(1, zeroMask);
+
+  cv::Mat mulResult;
+  cv::multiply(flippedEmoji, croppedFace, mulResult);
+  cv::add(resizedEmotionImg, mulResult, resizedEmotionImg);
+
   cv::Mat insetImage(origFrame, cv::Rect(face.x1, face.y1, croppedFace.cols,
                                       croppedFace.rows));
   resizedEmotionImg.copyTo(insetImage);
@@ -48,7 +54,6 @@ int main(int argc, char *argv[]) {
 
   // open video capture & window
   cv::VideoCapture cap(0);
-  cv::namedWindow(WINDOW_NAME, cv::WND_PROP_FULLSCREEN);
   std::cout << "Running emotion detector with " << windowWidth << "x"
             << windowHeight << " resolution." << std::endl;
   if (!cap.isOpened()) {
@@ -56,6 +61,7 @@ int main(int argc, char *argv[]) {
     return -1;
   }
 
+  cv::namedWindow(WINDOW_NAME, cv::WND_PROP_FULLSCREEN);
   while (1) {
     cv::Mat frame;
     cap >> frame;
@@ -84,7 +90,7 @@ int main(int argc, char *argv[]) {
                cv::INTER_LINEAR);
 
     cv::imshow(WINDOW_NAME, resizedFrame);
-    if (cv::waitKey(1) == 27) {
+    if (cv::waitKey(30) == 27) {
       break; // hit ESC to quit
     }
   }
