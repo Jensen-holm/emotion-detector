@@ -21,15 +21,8 @@ The model we are using to predict emotion was trained on this [kaggle dataset](h
 
 ## Getting Started
 
-**Dependencies**
-- opencv
-
 **Build & Run** <br>
 1. `cmake .` <br>
 2. `make` <br>
 3. `./emotion_detection.out` <br>
 
-**Docker useage**
-1. `docker build -t emotion_detector .` <br>
-2. `xhost + local:docker` <br>
-3. `docker run --device /dev/video0:/dev/video0 -v $(pwd):/home -v /tmp/.X11-unix:/tmp/.X11-unix -e DISPLAY=$DISPLAY emotion_detector` <br>
