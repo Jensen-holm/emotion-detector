@@ -26,3 +26,13 @@ The model we are using to predict emotion was trained on this [kaggle dataset](h
 2. `make` <br>
 3. `./emotion_detection.out` <br>
 
+**Docker Build & Run**
+
+requirements:
+- will not work on macos
+- need docker installed & running
+- need nvidia GPU
+
+1. `chmod u+x build.sh && ./build.sh` <br>
+2. `chmod u+x run.sh && ./run.sh` <br>
+
