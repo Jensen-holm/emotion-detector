@@ -26,7 +26,7 @@ The model we are using to predict emotion was trained on this [kaggle dataset](h
 2. `make` <br>
 3. `./emotion_detection.out` <br>
 
-**Docker Build & Run**
+**Docker Build & Run w/ NVIDIA GPU support**
 
 requirements:
 - will not work on macos
