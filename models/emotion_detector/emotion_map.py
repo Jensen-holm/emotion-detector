@@ -21,14 +21,16 @@ def load_emoji_map() -> dict[int, MatLike]:
     angry = __load_emoji("angry_emoji.png")
     smiling = __load_emoji("smiling_emoji.png")
     sad = __load_emoji("sad_emoji.png")
-    surprised = __load_emoji("surprised_emoji.png")
+    # surprised = __load_emoji("surprised_emoji.png")
     neutral = __load_emoji("neutral_emoji.png")
+    scared = __load_emoji("scared_emoji.png")
     return {
         0: angry,
         # 1: sad, # disgust
         # 2: angry, # fear
         3: smiling,
         4: sad,
-        5: surprised,
+        # 5: surprised,
+        5: scared,
         6: neutral,
     }

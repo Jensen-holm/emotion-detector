@@ -23,7 +23,6 @@ def main(cam_idx: int, refresh_interval: float) -> None:
     cv2.namedWindow("Emotion Detector", cv2.WND_PROP_FULLSCREEN)
 
     emotion_model = EmotionDetector()
-
     face_model = FaceDetector()
 
     faces: dict[int, MatLike] = {}
@@ -56,7 +55,7 @@ def main(cam_idx: int, refresh_interval: float) -> None:
         frame = cv2.resize(frame, (2200, 1080), interpolation=cv2.INTER_LINEAR)
         # display available emojis on the screen
         for emoji, loc in zip(emotion_model.emoji_map.values(), EMOJI_LOCS):
-            FaceInfo(*loc).overlay(frame, emoji) if loc else 0
+            FaceInfo(*loc).overlay(frame, emoji)
 
         cv2.imshow("Emotion Detector", frame)
         if cv2.waitKey(1) in CV_QUIT_KEYS:
