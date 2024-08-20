@@ -1,3 +1,4 @@
+from types import NoneType
 import cv2
 import os
 
@@ -7,35 +8,50 @@ from .face_info import FaceInfo
 
 MODEL_PATH = os.path.join(
     os.path.dirname(__file__),
-    # "version-slim-320_simplified.onnx",
-    "yunet.onnx",
+    "face_detection_yunet_2023mar.onnx",
 )
 
 
 class FaceDetector:
-    BLOB_SIZE = (320, 240)
-    MEAN_SUB_VALUES = (127.0, 127.0, 127.0)
+    __slots__ = ["__model"]
+    __MEAN_SUB_VALS = (104.0, 117.0, 123.0)
+    __BLOB_SIZE = (320, 320)
 
-    def __init__(self) -> None:
-        self.model = cv2.dnn.readNetFromONNX(MODEL_PATH)
-
-    def _pre_process_input(self, frame_input: MatLike) -> MatLike:
-        """
-        converts the frame into a blob that the face detector model can understand.
-        reference: https://github.com/Linzaer/Ultra-Light-Fast-Generic-Face-Detector-1MB/blob/master/tf/det_image.py
-        """
-        return cv2.dnn.blobFromImage(
-            frame_input,
-            1.0 / 128.0,
-            self.BLOB_SIZE,
-            self.MEAN_SUB_VALUES,
-            swapRB=True,
+    def __init__(self, confidence_threshold: float = 0.6) -> None:
+        self.__model = cv2.FaceDetectorYN.create(
+            model=MODEL_PATH,
+            config="",
+            input_size=self.__BLOB_SIZE,
+            score_threshold=confidence_threshold,
+            nms_threshold=0.3,
+            top_k=5000,
+            backend_id=0,
+            target_id=0,
         )
 
-    def predict(self, frame_input: MatLike):
-        """result in results =[background, face, x1, y1, x2, y2"""
-        orig_w, orig_h, _ = frame_input.shape
-        processed_frame = self._pre_process_input(frame_input)
-        self.model.setInput(processed_frame)
-        output = self.model.forward()
-        return output
+    def predict(self, frame_input: MatLike) -> list[FaceInfo]:
+        """returns a list of bounding box information for each face detected by yunet"""
+        resized_frame = cv2.resize(frame_input, self.__BLOB_SIZE)
+        faces = self.__model.detect(resized_frame)
+
+        if isinstance(faces[1], NoneType):
+            return []
+
+        face_infos: list[FaceInfo] = []
+        input_height, input_width, _ = frame_input.shape
+
+        for face_info in faces[1]:
+            x1, y1, w, h = face_info[:4]  # ignoring face landmarks
+            width_scaled = int(w * (input_width / self.__BLOB_SIZE[0]))
+            height_scaled = int(h * (input_height / self.__BLOB_SIZE[1]))
+            x1 = int(x1 * (input_width / self.__BLOB_SIZE[0]))
+            y1 = int(y1 * (input_height / self.__BLOB_SIZE[1]))
+            face = FaceInfo(
+                x1,
+                y1,
+                x2=x1 + width_scaled,
+                y2=y1 + height_scaled,
+            )
+            face_infos.append(face)
+
+        return face_infos

@@ -2,7 +2,7 @@ import cv2
 
 from models import FaceDetector, EmotionDetector
 
-CV_QUIT_KEYS: set[int] = {27, ord("q")} # ESC || q
+CV_QUIT_KEYS: set[int] = {27, ord("q")}  # ESC || q
 
 
 def main(cam_idx: int) -> None:
@@ -21,11 +21,14 @@ def main(cam_idx: int) -> None:
         if not ret:
             break
 
-        face_info = face_model.predict(frame)
-        for face in face_info:
-            ...
+        for face in face_model.predict(frame):
+            cropped_face = face.crop(frame)
+            emoji = emotion_model.predict(cropped_face)
+            face.overlay(frame, emoji)
 
-        if cv2.waitKey(0) & 0xFF in CV_QUIT_KEYS:
+        cv2.imshow("emotion detection", frame)
+
+        if cv2.waitKey(1) in CV_QUIT_KEYS:
             break
 
     cv2.destroyAllWindows()
