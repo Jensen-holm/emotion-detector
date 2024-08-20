@@ -3,6 +3,7 @@ import time
 import cv2
 
 from models import FaceDetector, EmotionDetector
+from models.face_detector.face_info import FaceInfo
 
 CV_QUIT_KEYS: set[int] = {27, ord("q")}  # ESC || q
 
@@ -23,7 +24,7 @@ def main(cam_idx: int, refresh_interval: float) -> None:
     last_refresh = time.time()
     while ok:
         ret, frame = cap.read()
-        if not ret or frame.size == 0:
+        if not ret:
             break
 
         pred_faces = face_model.predict(frame)
@@ -45,6 +46,7 @@ def main(cam_idx: int, refresh_interval: float) -> None:
                 continue
             face.overlay(frame, emoji)
 
+        # resize frame to full screen size (might have to adjust this value once we have monitor)
         frame = cv2.resize(frame, (1920, 1080), interpolation=cv2.INTER_LINEAR)
         cv2.imshow("Emotion Detector", frame)
         if cv2.waitKey(1) in CV_QUIT_KEYS:
