@@ -7,7 +7,7 @@ import cv2
 
 @dataclass
 class FaceInfo:
-    __slots__ = ["x1", "y1", "x2", "y2", "pt1", "pt2", "rows", "cols"]
+    __slots__ = ["x1", "y1", "x2", "y2", "pt1", "pt2"]
     x1: int
     y1: int
     x2: int
@@ -32,9 +32,9 @@ class FaceInfo:
 
         face_px_to_add = np.where(resized_overlay == 0, cropped_face, 0)
         add_result = cv2.add(resized_overlay, face_px_to_add)
-
-        add_result = np.clip(add_result, 0, 255).astype(np.uint8)
-        frame[self.y1 : self.y2, self.x1 : self.x2] = add_result
+        frame[self.y1 : self.y2, self.x1 : self.x2] = np.clip(
+            add_result, 0, 255
+        ).astype(np.uint8)
         return frame
 
     def draw_box(

@@ -33,7 +33,6 @@ class FaceDetector:
         """returns a list of bounding box information for each face detected by yunet"""
         resized_frame = cv2.resize(frame_input, self.__BLOB_SIZE)
         faces = self.__model.detect(resized_frame)
-
         if isinstance(faces[1], NoneType):
             return []
 

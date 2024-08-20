@@ -7,7 +7,7 @@ from models import FaceDetector, EmotionDetector
 CV_QUIT_KEYS: set[int] = {27, ord("q")}  # ESC || q
 
 
-def main(cam_idx: int, refresh_interval: float = 1.0) -> None:
+def main(cam_idx: int, refresh_interval: float) -> None:
     """opens video capture at cam_idx, looks for faces and detects emotions in real time"""
     cap = cv2.VideoCapture(cam_idx)
     if not (ok := cap.isOpened()):
@@ -36,15 +36,14 @@ def main(cam_idx: int, refresh_interval: float = 1.0) -> None:
             faces.clear()
             for face_num, face in enumerate(pred_faces):
                 emoji = emotion_model.predict(face.crop(frame))
-                face.overlay(frame, emoji)
                 faces[face_num] = emoji
             last_refresh = cur_time
-        else:
-            for face_num, face in enumerate(pred_faces):
-                emoji = faces.get(face_num, None)
-                if emoji is None:
-                    continue
-                face.overlay(frame, emoji)
+
+        for face_num, face in enumerate(pred_faces):
+            emoji = faces.get(face_num, None)
+            if emoji is None:
+                continue
+            face.overlay(frame, emoji)
 
         frame = cv2.resize(frame, (1920, 1080), interpolation=cv2.INTER_LINEAR)
         cv2.imshow("Emotion Detector", frame)
@@ -56,4 +55,4 @@ def main(cam_idx: int, refresh_interval: float = 1.0) -> None:
 
 
 if __name__ == "__main__":
-    main(cam_idx=0, refresh_interval=1.0)
+    main(cam_idx=0, refresh_interval=0.5)
