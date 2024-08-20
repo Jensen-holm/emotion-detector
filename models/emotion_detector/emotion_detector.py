@@ -19,6 +19,9 @@ class EmotionDetector:
         """loads the emotion detector model into opencv.dnn.Net"""
         self.emoji_map = load_emoji_map()
         self.__model = cv2.dnn.readNetFromTensorflow(MODEL_PATH)
+        EMOJI_LOCS: list[Tuple[int, int, int, int]] = [
+            (i, 0, i + 150, 150) for i in range(0, 1000, 200)
+        ]
 
     def _pre_process_input(self, face_input: MatLike) -> MatLike:
         """
@@ -44,6 +47,12 @@ class EmotionDetector:
         self.__model.setInput(pre_processed_face)
         output = self.__model.forward()
         emotion = int(np.argmax(output))
+
+        if emotion == 1:  # disgust = sad
+            emotion = 4
+        if emotion == 2:  # fear = anger
+            emotion = 0
+
         if (emoji := self.emoji_map.get(emotion, None)) is None:
             raise Exception(
                 f"no such emoji in the emoji map at emotion idx = {emotion}"

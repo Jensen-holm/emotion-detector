@@ -18,12 +18,17 @@ def load_emoji_map() -> dict[int, MatLike]:
         )
         return cv2.imread(path)
 
+    angry = __load_emoji("angry_emoji.png")
+    smiling = __load_emoji("smiling_emoji.png")
+    sad = __load_emoji("sad_emoji.png")
+    surprised = __load_emoji("surprised_emoji.png")
+    neutral = __load_emoji("neutral_emoji.png")
     return {
-        0: __load_emoji("angry_emoji.png"),
-        1: __load_emoji("disgust_emoji.png"),
-        2: __load_emoji("scared_emoji.png"),
-        3: __load_emoji("smiling_emoji.png"),
-        4: __load_emoji("sad_emoji.png"),
-        5: __load_emoji("surprised_emoji.png"),
-        6: __load_emoji("neutral_emoji.png"),
+        0: angry,
+        # 1: sad, # disgust
+        # 2: angry, # fear
+        3: smiling,
+        4: sad,
+        5: surprised,
+        6: neutral,
     }
