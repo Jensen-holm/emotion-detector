@@ -16,8 +16,6 @@ class FaceInfo:
     def __post_init__(self) -> None:
         self.pt1 = (self.x1, self.y1)
         self.pt2 = (self.x2, self.y2)
-        self.rows = int(np.sqrt(np.square(self.x1 - self.x2)))
-        self.cols = int(np.sqrt(np.square(self.y1 - self.y2)))
 
     def crop(self, frame: MatLike) -> MatLike:
         """crop the frame to jsut the pixels of this face"""
