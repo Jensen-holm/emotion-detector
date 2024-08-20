@@ -12,13 +12,13 @@ MODEL_PATH = os.path.join(
 
 
 class EmotionDetector:
-    __slots__ = ["__emoji_map", "__model"]
+    __slots__ = ["emoji_map", "__model"]
     BLOB_SIZE = (48, 48)
 
     def __init__(self) -> None:
         """loads the emotion detector model into opencv.dnn.Net"""
+        self.emoji_map = load_emoji_map()
         self.__model = cv2.dnn.readNetFromTensorflow(MODEL_PATH)
-        self.__emoji_map = load_emoji_map()
 
     def _pre_process_input(self, face_input: MatLike) -> MatLike:
         """
@@ -44,7 +44,7 @@ class EmotionDetector:
         self.__model.setInput(pre_processed_face)
         output = self.__model.forward()
         emotion = int(np.argmax(output))
-        if (emoji := self.__emoji_map.get(emotion, None)) is None:
+        if (emoji := self.emoji_map.get(emotion, None)) is None:
             raise Exception(
                 f"no such emoji in the emoji map at emotion idx = {emotion}"
             )

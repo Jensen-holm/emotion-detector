@@ -1,4 +1,5 @@
 from cv2.typing import MatLike
+from typing import Tuple
 import time
 import cv2
 
@@ -6,6 +7,10 @@ from models import FaceDetector, EmotionDetector
 from models.face_detector.face_info import FaceInfo
 
 CV_QUIT_KEYS: set[int] = {27, ord("q")}  # ESC || q
+
+EMOJI_LOCS: list[Tuple[int, int, int, int]] = [
+    (i, 0, i + 200, 200) for i in range(0, 1400, 200)
+]
 
 
 def main(cam_idx: int, refresh_interval: float) -> None:
@@ -48,6 +53,12 @@ def main(cam_idx: int, refresh_interval: float) -> None:
 
         # resize frame to full screen size (might have to adjust this value once we have monitor)
         frame = cv2.resize(frame, (1920, 1080), interpolation=cv2.INTER_LINEAR)
+        # display available emojis on the screen
+        for emoji, loc in zip(emotion_model.emoji_map.values(), EMOJI_LOCS):
+            if not loc:
+                continue
+            FaceInfo(*loc).overlay(frame, emoji)
+
         cv2.imshow("Emotion Detector", frame)
         if cv2.waitKey(1) in CV_QUIT_KEYS:
             break
