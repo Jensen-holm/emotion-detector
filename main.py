@@ -19,8 +19,8 @@ def main(cam_idx: int, refresh_interval: float = 1.0) -> None:
     emotion_model = EmotionDetector()
     face_model = FaceDetector()
 
-    last_refresh = time.time()
     faces: dict[int, MatLike] = {}
+    last_refresh = time.time()
     while ok:
         ret, frame = cap.read()
         if not ret:
@@ -41,7 +41,9 @@ def main(cam_idx: int, refresh_interval: float = 1.0) -> None:
             last_refresh = cur_time
         else:
             for face_num, face in enumerate(pred_faces):
-                emoji = faces[face_num]
+                emoji = faces.get(face_num, None)
+                if emoji is None:
+                    continue
                 face.overlay(frame, emoji)
 
         frame = cv2.resize(frame, (1920, 1080), interpolation=cv2.INTER_LINEAR)
@@ -54,4 +56,4 @@ def main(cam_idx: int, refresh_interval: float = 1.0) -> None:
 
 
 if __name__ == "__main__":
-    main(cam_idx=0, refresh_interval=2.0)
+    main(cam_idx=0, refresh_interval=1.0)
