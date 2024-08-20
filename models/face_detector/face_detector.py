@@ -45,12 +45,11 @@ class FaceDetector:
             height_scaled = int(h * (input_height / self.__BLOB_SIZE[1]))
             x1 = int(x1 * (input_width / self.__BLOB_SIZE[0]))
             y1 = int(y1 * (input_height / self.__BLOB_SIZE[1]))
-            face = FaceInfo(
-                x1,
-                y1,
-                x2=x1 + width_scaled,
-                y2=y1 + height_scaled,
-            )
-            face_infos.append(face)
+            y2 = y1 + height_scaled
+            x2 = x1 + width_scaled
+            coords = (x1, y1, x2, y2)
+            if any([coord < 0 for coord in coords]):
+                continue
+            face_infos.append(FaceInfo(*coords))
 
         return face_infos

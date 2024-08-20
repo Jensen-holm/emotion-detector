@@ -23,7 +23,7 @@ def main(cam_idx: int, refresh_interval: float) -> None:
     last_refresh = time.time()
     while ok:
         ret, frame = cap.read()
-        if not ret:
+        if not ret or frame.size == 0:
             break
 
         pred_faces = face_model.predict(frame)
