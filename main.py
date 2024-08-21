@@ -23,7 +23,6 @@ def main(cam_idx: int, refresh_interval: float) -> None:
     cv2.namedWindow("Emotion Detector", cv2.WND_PROP_FULLSCREEN)
 
     emotion_model = EmotionDetector()
-
     face_model = FaceDetector()
 
     faces: dict[int, MatLike] = {}
@@ -59,7 +58,10 @@ def main(cam_idx: int, refresh_interval: float) -> None:
             FaceInfo(*loc).overlay(frame, emoji) if loc else 0
 
         cv2.imshow("Emotion Detector", frame)
-        if cv2.waitKey(1) in CV_QUIT_KEYS:
+        if (
+            cv2.waitKey(1) in CV_QUIT_KEYS
+            or cv2.getWindowProperty("Emotion Detector", cv2.WND_PROP_VISIBLE) < 1
+        ):
             break
 
     cv2.destroyAllWindows()
