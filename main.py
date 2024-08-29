@@ -69,4 +69,21 @@ def main(cam_idx: int, refresh_interval: float) -> None:
 
 
 if __name__ == "__main__":
-    main(cam_idx=0, refresh_interval=0.5)
+    from argparse import ArgumentParser
+
+    parser = ArgumentParser()
+
+    parser.add_argument(
+        "--cam_idx", type=int, default=0, help="index of the webcam (default 0)"
+    )
+    parser.add_argument(
+        "--refresh_interval",
+        type=float,
+        default=0.5,
+        help="time in seconds between emotion refreshes (default 0.5)",
+    )
+
+    _ = main(
+        cam_idx=parser.parse_args().cam_idx,
+        refresh_interval=parser.parse_args().refresh_interval,
+    )

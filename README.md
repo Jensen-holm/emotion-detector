@@ -21,7 +21,13 @@ Emotions are refreshed every 0.5 seconds with the default program, but this is c
 
 If you want to use something other than your default opencv camera (cv2.VideoCapture(0)), or change the emotion refresh rate, change this line at the bottom of `main.py`: <br>
 
-```python
-if __name__ == "__main__":
-    main(cam_idx=0, refresh_interval=0.5)
-```
+## Options
+
+- `--cam_idx`: opencv camera index, defualts to 0.
+- `--refresh_interval`: time in seconds between emoji refreshes, default is 0.5s.
+
+## Useage
+
+`python3 main.py --refresh_interval=1.0 --cam_idx=1`
+
+The above command will likley connect to a webcam, and the emoji's will refresh every 1.0 seconds.
