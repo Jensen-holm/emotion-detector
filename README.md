@@ -19,8 +19,6 @@ Emotions are refreshed every 0.5 seconds with the default program, but this is c
 3. `pip install -r requirements.txt` <br>
 4. `python3 main.py`
 
-If you want to use something other than your default opencv camera (cv2.VideoCapture(0)), or change the emotion refresh rate, change this line at the bottom of `main.py`: <br>
-
 ## Options
 
 - `--cam_idx`: opencv camera index, defualts to 0.
